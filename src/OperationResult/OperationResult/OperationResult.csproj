@@ -1,7 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Victor Divino</Authors>
+    <Product>OperationResult</Product>
+    <PackageId>Divino.OperationResult</PackageId>
+    <Description>A simple class to standardize the operation result</Description>
+    <PackageTags>error handling operation result standardize</PackageTags>
+    <PackageProjectUrl>https://github.com/victorDivino/operationResult</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
