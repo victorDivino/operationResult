@@ -1,2 +1,3 @@
-# operationResult
-Component to avoid using exceptions for handling known flows in application.
+# Operation Result
+
+A simple class to standardize the operation result
