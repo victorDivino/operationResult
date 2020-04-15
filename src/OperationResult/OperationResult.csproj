@@ -1,16 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Victor Divino</Authors>
     <Product>OperationResult</Product>
     <PackageId>Divino.OperationResult</PackageId>
-    <Description>A simple class to standardize the operation result</Description>
-    <PackageTags>error handling operation result standardize</PackageTags>
+    <Description>This a simple C# class libary to handle error of an operation</Description>
+    <PackageTags>error handling operation result</PackageTags>
     <PackageProjectUrl>https://github.com/victorDivino/operationResult</PackageProjectUrl>
     <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
-
 </Project>
