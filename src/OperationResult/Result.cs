@@ -5,7 +5,7 @@ namespace OperationResult
 {
     public struct Result<T>
     {
-        public T Value { get; set; }
+        public T Value { get; }
         public Exception Exception { get; }
         public bool IsSuccess { get; }
 
@@ -29,7 +29,7 @@ namespace OperationResult
         public static implicit operator Result<T>(Exception exception)
             => new Result<T>(exception);
 
-        public Result<TEnd> ChangeInAnotherValue<TEnd>(Func<T, TEnd> converter)
+        public Result<TEnd> ChangeInAnotherResult<TEnd>(Func<T, TEnd> converter)
             => IsSuccess
                 ? new Result<TEnd>(converter(Value))
                 : new Result<TEnd>(Exception);
@@ -40,20 +40,16 @@ namespace OperationResult
                 : new Result(Exception);
 
         public void Deconstruct(out bool success, out T value)
-        {
-            success = IsSuccess;
-            value = Value;
-        }
+            => (success, value) = (IsSuccess, Value);
 
         public void Deconstruct(out bool success, out T value, out Exception exception)
-        {
-            success = IsSuccess;
-            value = Value;
-            exception = Exception;
-        }
+            => (success, value, exception) = (IsSuccess, Value, Exception);
 
         public static implicit operator bool(Result<T> result)
             => result.IsSuccess;
+
+        public static implicit operator Task<Result<T>>(Result<T> result)
+            => result.AsTask;
 
         public Task<Result<T>> AsTask => Task.FromResult(this);
     }
@@ -97,11 +93,11 @@ namespace OperationResult
         public static implicit operator bool(Result result)
             => result.IsSuccess;
 
-        public void Deconstruct(out bool isSuccess, out Exception exception)
-        {
-            isSuccess = IsSuccess;
-            exception = Exception;
-        }
+        public static implicit operator Task<Result>(Result result)
+            => result.AsTask;
+
+        public void Deconstruct(out bool success, out Exception exception)
+            => (success, exception) = (IsSuccess, Exception);
 
         public Task<Result> AsTask => Task.FromResult(this);
     }
