@@ -31,7 +31,7 @@ namespace OperationResult
 
         public Result<TEnd> ChangeInAnotherResult<TEnd>(Func<T, TEnd> converter)
             => IsSuccess
-                ? new Result<TEnd>(converter(Result))
+                ? new Result<TEnd>(converter(Value))
                 : new Result<TEnd>(Exception);
 
         public Result ChangeInNoResult()

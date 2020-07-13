@@ -1,13 +1,12 @@
 using System;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace OperationResult.Tests
 {
-    [TestClass]
     public class OperationResultTests
     {
-        [TestMethod]
+        [Fact]
         public void Result_Success_Should_true()
         {
             //Arrange
@@ -17,7 +16,7 @@ namespace OperationResult.Tests
             result.IsSuccess.Should().BeTrue();
         }
 
-        [TestMethod]
+        [Fact]
         public void Result_Error_Should_False()
         {
             //Arrange
