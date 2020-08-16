@@ -4,11 +4,30 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: "windows-latest"
 
-steps:
-- powershell: .\build.ps1 -Target Test
-  displayName: 'Build and Run Tests'
+stages:
+  - stage: Compile
+    jobs:
+      - job: Build
+        steps:
+          - powershell: .\build.ps1 -target Build
+
+  - stage: Test
+    jobs:
+      - job: UnitTest
+        steps:
+          - powershell: .\build.ps1 -target UnitTest
+
+      - job: Coverage
+        steps:
+          - powershell: .\build.ps1 -target Coverage
+
+  - stage: Deploy
+    jobs:
+      - job: Publish
+        steps:
+          - powershell: .\build.ps1 -target Publish -configuration Release
