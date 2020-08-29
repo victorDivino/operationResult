@@ -3,9 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-  - master
-
 pool:
   vmImage: "windows-latest"
 
@@ -23,10 +20,12 @@ stages:
           - powershell: .\build.ps1 -target UnitTest
 
       - job: Coverage
+        dependsOn: UnitTest
         steps:
           - powershell: .\build.ps1 -target Coverage
 
   - stage: Deploy
+    condition: eq(variables['Build.SourceBranchName'], 'master')
     jobs:
       - job: Publish
         steps:
