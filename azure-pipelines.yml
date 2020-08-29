@@ -27,6 +27,7 @@ stages:
           - powershell: .\build.ps1 -target Coverage
 
   - stage: Deploy
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
     jobs:
       - job: Publish
         steps:
