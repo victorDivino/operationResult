@@ -29,6 +29,12 @@ namespace OperationResult
         public static implicit operator Result<T>(Exception exception)
             => new Result<T>(exception);
 
+        public static implicit operator T(Result<T> result)
+            => result.Value;
+
+        public static implicit operator Exception(Result<T> result)
+            => result.Exception;
+
         public Result<TEnd> ChangeInAnotherResult<TEnd>(Func<T, TEnd> converter)
             => IsSuccess
                 ? new Result<TEnd>(converter(Value))
@@ -89,6 +95,9 @@ namespace OperationResult
 
         public static implicit operator Result(Exception exception)
             => new Result(exception);
+
+        public static implicit operator Exception(Result result)
+            => result.Exception;
 
         public static implicit operator bool(Result result)
             => result.IsSuccess;
