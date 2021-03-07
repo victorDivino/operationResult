@@ -71,7 +71,7 @@ namespace OperationResult.Tests
             var count = 0L;
             var exception = new Exception("error");
             var result = Result.Error<int>(exception);
-            
+
             //Act
             var changedResult = result.ChangeInAnotherResult<long>((t) => ++count);
 
@@ -79,6 +79,34 @@ namespace OperationResult.Tests
             changedResult.Value.Should().Be(default);
             changedResult.Exception.Should().BeSameAs(exception);
             count.Should().Be(0L);
+        }
+
+        [Fact]
+        public void ChangeInNoResult_WhenResultIsSuccess_ShouldReturnSuccessResult()
+        {
+            //Arrange                      
+            var result = Result.Success(1);
+
+            //Act
+            var changedResult = result.ChangeInNoResult();
+
+            //Assert
+            changedResult.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ChangeInNoResult_WhenResultIsError_ShouldReturnErrorResult()
+        {
+            //Arrange                      
+            var exception = new Exception("error");
+            var result = Result.Error<int>(exception);
+
+            //Act
+            var changedResult = result.ChangeInNoResult();
+
+            //Assert
+            changedResult.IsSuccess.Should().BeFalse();
+            changedResult.Exception.Should().BeSameAs(exception);
         }
     }
 }
