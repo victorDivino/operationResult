@@ -17,6 +17,16 @@ namespace OperationResult.Tests
         }
 
         [Fact]
+        public void ResultT_Success_Should_true()
+        {
+            //Arrange
+            var result = Result.Success(0);
+
+            //Assert
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
         public void Result_Error_Should_False()
         {
             //Arrange
@@ -24,6 +34,51 @@ namespace OperationResult.Tests
 
             //Assert
             result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ResultT_Error_Should_False()
+        {
+            //Arrange
+            var result = Result.Error<int>(new Exception());
+
+            //Assert
+            result.IsSuccess.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ChangeInAnotherResult_WhenResultIsSucess_ShouldCallFuncDelegate()
+        {
+            //Arrange
+            var count = 0L;
+            var result = Result.Success(0);
+
+            //Act
+            var changedResult = result.ChangeInAnotherResult<long>((t) =>
+            {
+                return ++count;
+            });
+
+            //Assert
+            changedResult.Value.Should().BeOfType(typeof(long)).And.Be(1L);
+            count.Should().Be(1L);
+        }
+
+        [Fact]
+        public void ChangeInAnotherResult_WhenResultIsError_ShouldNotCallFuncDelegate()
+        {
+            //Arrange
+            var count = 0L;
+            var exception = new Exception("error");
+            var result = Result.Error<int>(exception);
+            
+            //Act
+            var changedResult = result.ChangeInAnotherResult<long>((t) => ++count);
+
+            //Assert
+            changedResult.Value.Should().Be(default);
+            changedResult.Exception.Should().BeSameAs(exception);
+            count.Should().Be(0L);
         }
     }
 }
