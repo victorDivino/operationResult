@@ -73,7 +73,10 @@ namespace OperationResult.Tests
             var result = Result.Error<int>(exception);
 
             //Act
-            var changedResult = result.ChangeInAnotherResult<long>((t) => ++count);
+            var changedResult = result.ChangeInAnotherResult<long>((t) =>
+            {
+                return ++count;
+            });
 
             //Assert
             changedResult.Value.Should().Be(default);
