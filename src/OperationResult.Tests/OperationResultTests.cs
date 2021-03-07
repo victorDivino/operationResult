@@ -20,10 +20,11 @@ namespace OperationResult.Tests
         public void ResultT_Success_Should_true()
         {
             //Arrange
-            var result = Result.Success(0);
+            var result = Result.Success(2);
 
             //Assert
             result.IsSuccess.Should().BeTrue();
+            result.Value.Should().Be(2);
         }
 
         [Fact]
