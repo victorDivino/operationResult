@@ -25,5 +25,25 @@ namespace OperationResult.Tests
             //Assert
             result.IsSuccess.Should().BeFalse();
         }
+
+        [Fact]
+        public void Result_Error_Should_Throw_Exception_When_Argument_Is_Null()
+        {
+            //Arrange
+            Action act = () => Result.Error(null);            
+
+            //Assert
+            act.Should().Throw<ArgumentNullException>().Where(e => e.Message.Contains("exception"));
+        }
+
+        [Fact]
+        public void ResultT_Error_Should_Throw_Exception_When_Argument_Is_Null()
+        {
+            //Arrange
+            Action act = () => Result.Error<string>(null);            
+
+            //Assert
+            act.Should().Throw<ArgumentNullException>().Where(e => e.Message.Contains("exception"));
+        }
     }
 }
