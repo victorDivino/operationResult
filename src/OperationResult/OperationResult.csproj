@@ -9,10 +9,10 @@
     <PackageProjectUrl>https://github.com/victorDivino/operationResult</PackageProjectUrl>
     <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <releaseNotes>
-      ## Version 2.0.1 ##
-      Fixed TargetFramework
+      ## Version 2.0.2 ##
+      Throw ArgumentNullException
     </releaseNotes>
   </PropertyGroup>
 </Project>

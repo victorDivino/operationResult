@@ -18,7 +18,7 @@ namespace OperationResult
 
         public Result(Exception exception)
         {
-            Exception = exception;
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             IsSuccess = false;
             Value = default;
         }
@@ -67,7 +67,7 @@ namespace OperationResult
 
         public Result(Exception exception)
         {
-            Exception = exception;
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             IsSuccess = false;
         }
 
