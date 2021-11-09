@@ -7,7 +7,7 @@ pool:
   vmImage: "windows-latest"
 
 stages:
-  - stage: Tool restore
+  - stage: Tool_Restore
     jobs:
       - job: Build
         steps:
