@@ -5,7 +5,7 @@ var configuration = Argument("configuration", "Debug");
 var solution = "./OperationResult.sln";
 var nugetKey = EnvironmentVariable("NUGET_KEY");
 var nugetSource = EnvironmentVariable("NUGET_SOURCE");
-var nugetVersion = "2.0.2"; 
+var nugetVersion = "3.0.0"; 
 
 Task("Build")
     .Does(() =>
@@ -24,25 +24,18 @@ Task("UnitTest")
     DotNetCoreTest(solution, new DotNetCoreTestSettings 
     {
         Configuration = configuration,
+        NoRestore = true,
         NoBuild = true,
-        Logger = "console;verbosity=normal"
+        Settings = "coverlet.runsettings"
     });
 });
 
 Task("Coverage")
-    .IsDependentOn("Build")
+    .IsDependentOn("UnitTest")
     .Does(async () =>
 {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings 
-    {
-        Configuration = configuration,
-        NoRestore = true,
-        NoBuild = true,
-        Logger = "console;verbosity=normal",
-        Settings = "coverlet.runsettings"
-    });
-    
-    ReportGenerator("./TestResults/*/*.xml", "./coverageOutput", new ReportGeneratorSettings  { ReportTypes = new []
+    GlobPattern reports = "./TestResults/*/*.xml";
+    ReportGenerator(reports, "./coverageOutput", new ReportGeneratorSettings  { ReportTypes = new []
     {
         ReportGeneratorReportType.TextSummary,
         ReportGeneratorReportType.Html
