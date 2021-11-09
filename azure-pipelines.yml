@@ -7,26 +7,32 @@ pool:
   vmImage: "windows-latest"
 
 stages:
+  - stage: Tool restore
+    jobs:
+      - job: Build
+        steps:
+          - powershell: dotnet tool restore
+
   - stage: Compile
     jobs:
       - job: Build
         steps:
-          - powershell: .\build.ps1 -target Build
+          - powershell: dotnet dotnet-cake --target=Build
 
   - stage: Test
     jobs:
       - job: UnitTest
         steps:
-          - powershell: .\build.ps1 -target UnitTest
+          - powershell: dotnet dotnet-cake --target=UnitTest --exclusive
 
       - job: Coverage
         dependsOn: UnitTest
         steps:
-          - powershell: .\build.ps1 -target Coverage
+          - powershell: dotnet dotnet-cake --target=Coverage --exclusive
 
   - stage: Deploy
     condition: eq(variables['Build.SourceBranchName'], 'master')
     jobs:
       - job: Publish
         steps:
-          - powershell: .\build.ps1 -target Publish -configuration Release
+          - powershell: dotnet dotnet-cake --target=Publish -configuration Release

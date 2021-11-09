@@ -24,25 +24,18 @@ Task("UnitTest")
     DotNetCoreTest(solution, new DotNetCoreTestSettings 
     {
         Configuration = configuration,
+        NoRestore = true,
         NoBuild = true,
-        Logger = "console;verbosity=normal"
+        Settings = "coverlet.runsettings"
     });
 });
 
 Task("Coverage")
-    .IsDependentOn("Build")
+    .IsDependentOn("UnitTest")
     .Does(async () =>
 {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings 
-    {
-        Configuration = configuration,
-        NoRestore = true,
-        NoBuild = true,
-        Logger = "console;verbosity=normal",
-        Settings = "coverlet.runsettings"
-    });
-    
-    ReportGenerator("./TestResults/*/*.xml", "./coverageOutput", new ReportGeneratorSettings  { ReportTypes = new []
+    GlobPattern reports = "./TestResults/*/*.xml";
+    ReportGenerator(reports, "./coverageOutput", new ReportGeneratorSettings  { ReportTypes = new []
     {
         ReportGeneratorReportType.TextSummary,
         ReportGeneratorReportType.Html
