@@ -7,26 +7,17 @@ pool:
   vmImage: "windows-latest"
 
 stages:
-  - stage: Tool_Restore
+  - stage: Compile_Test
     jobs:
-      - job: Build
+      - job: Tool_Restore
         steps:
           - script: dotnet tool restore
-
-  - stage: Compile
-    dependsOn: Tool_Restore
-    jobs:
       - job: Build
         steps:
           - script: dotnet dotnet-cake --target=Build
-
-  - stage: Test
-    dependsOn: Compile
-    jobs:
       - job: UnitTest
         steps:
           - script: dotnet dotnet-cake --target=UnitTest --exclusive
-
       - job: Coverage
         dependsOn: UnitTest
         steps:
