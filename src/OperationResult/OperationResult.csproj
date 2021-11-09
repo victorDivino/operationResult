@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net5.0;net6.0</TargetFrameworks>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
     <LangVersion>10</LangVersion>
     <Authors>Victor Divino</Authors>
     <Product>OperationResult</Product>

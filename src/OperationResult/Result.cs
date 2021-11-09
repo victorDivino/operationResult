@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace OperationResult;
+﻿namespace OperationResult;
 
 public struct Result<T>
 {

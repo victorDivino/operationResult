@@ -4,6 +4,7 @@
     <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
+    <ImplicitUsings>true</ImplicitUsings>
   </PropertyGroup>
   
   <ItemGroup>
