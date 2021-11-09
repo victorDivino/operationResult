@@ -4,28 +4,35 @@
 # https://aka.ms/yaml
 
 pool:
-  vmImage: "windows-latest"
+  vmImage: ubuntu-latest
+
+variables:
+  dotNetVersion: '6.0.x'
 
 stages:
   - stage: Compile_Test
     jobs:
-      - job: Tool_Restore
+      - job: Build_UnitTest_Coverage
         steps:
-          - script: dotnet tool restore
-      - job: Build
-        steps:
-          - script: dotnet dotnet-cake --target=Build
-      - job: UnitTest
-        steps:
-          - script: dotnet dotnet-cake --target=UnitTest --exclusive
-      - job: Coverage
-        dependsOn: UnitTest
-        steps:
-          - script: dotnet dotnet-cake --target=Coverage --exclusive
+        - task: UseDotNet@2
+          inputs:
+            version: $(dotNetVersion)
+            includePreviewVersions: true
+        - script: dotnet tool restore
+          displayName: dotnet tool restore
+        - script: dotnet dotnet-cake --target=Coverage
+          displayName: Build & Test & Coverage
 
   - stage: Deploy
     condition: eq(variables['Build.SourceBranchName'], 'master')
     jobs:
       - job: Publish
         steps:
-          - script: dotnet dotnet-cake --target=Publish -configuration Release
+        - task: UseDotNet@2
+          inputs:
+            version: $(dotNetVersion)
+            includePreviewVersions: true
+        - script: dotnet tool restore
+          displayName: dotnet tool restore
+        - script: dotnet dotnet-cake --target=Publish -configuration Release
+          displayName: Publish package
