@@ -5,7 +5,7 @@ var configuration = Argument("configuration", "Debug");
 var solution = "./OperationResult.sln";
 var nugetKey = EnvironmentVariable("NUGET_KEY");
 var nugetSource = EnvironmentVariable("NUGET_SOURCE");
-var nugetVersion = "2.0.2"; 
+var nugetVersion = "3.0.0"; 
 
 Task("Build")
     .Does(() =>
