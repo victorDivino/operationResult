@@ -34,5 +34,5 @@ stages:
             includePreviewVersions: true
         - script: dotnet tool restore
           displayName: dotnet tool restore
-        - script: dotnet dotnet-cake --target=Publish -configuration Release
+        - script: dotnet dotnet-cake --target=Publish --configuration=Release
           displayName: Publish package
