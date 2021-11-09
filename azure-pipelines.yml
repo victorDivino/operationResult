@@ -11,28 +11,30 @@ stages:
     jobs:
       - job: Build
         steps:
-          - powershell: dotnet tool restore
+          - script: dotnet tool restore
 
   - stage: Compile
+    dependsOn: Tool_Restore
     jobs:
       - job: Build
         steps:
-          - powershell: dotnet dotnet-cake --target=Build
+          - script: dotnet dotnet-cake --target=Build
 
   - stage: Test
+    dependsOn: Compile
     jobs:
       - job: UnitTest
         steps:
-          - powershell: dotnet dotnet-cake --target=UnitTest --exclusive
+          - script: dotnet dotnet-cake --target=UnitTest --exclusive
 
       - job: Coverage
         dependsOn: UnitTest
         steps:
-          - powershell: dotnet dotnet-cake --target=Coverage --exclusive
+          - script: dotnet dotnet-cake --target=Coverage --exclusive
 
   - stage: Deploy
     condition: eq(variables['Build.SourceBranchName'], 'master')
     jobs:
       - job: Publish
         steps:
-          - powershell: dotnet dotnet-cake --target=Publish -configuration Release
+          - script: dotnet dotnet-cake --target=Publish -configuration Release
