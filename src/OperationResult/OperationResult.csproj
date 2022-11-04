@@ -12,8 +12,10 @@
     <PackageProjectUrl>https://github.com/victorDivino/operationResult</PackageProjectUrl>
     <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
+    <Version>3.1.0</Version>
     <releaseNotes>
+      ## Version 3.1.0 ##
+      - Added interface to make it easy to identify the Result, even when it is generic version
       ## Version 3.0.0 ##
       - Target frameworks: netstandard2.0;net5.0;net6.0
       - Anotated properties with Nullable attributes
@@ -21,4 +23,10 @@
       Throw ArgumentNullException
     </releaseNotes>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
