@@ -7,7 +7,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  dotNetVersion: '6.0.x'
+  dotNetVersion: '8.0.x'
 
 stages:
   - stage: Compile_Test

@@ -1,13 +1,13 @@
-﻿namespace OperationResult;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public struct Result<T> : IResult
+namespace OperationResult;
+
+public readonly struct Result<T> : IResultValue<T, Result<T>>
 {
     public T? Value { get; }
     public Exception? Exception { get; }
-#if NET5_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, nameof(Value))]
-    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, nameof(Exception))]
-#endif
+    [MemberNotNullWhen(true, nameof(Value))]
+    [MemberNotNullWhen(false, nameof(Exception))]
     public bool IsSuccess { get; }
 
     public Result(T value)
@@ -31,6 +31,7 @@ public struct Result<T> : IResult
         => new(exception);
 
     public Result<TEnd> ChangeInAnotherResult<TEnd>(Func<T, TEnd> converter)
+        where TEnd : IResult<TEnd>
         => IsSuccess
             ? new Result<TEnd>(converter(Value))
             : new Result<TEnd>(Exception);
@@ -45,6 +46,12 @@ public struct Result<T> : IResult
 
     public void Deconstruct(out bool success, out T? value, out Exception? exception)
         => (success, value, exception) = (IsSuccess, Value, Exception);
+
+    static Result<T> IResultValue<T, Result<T>>.Success(T value) => new(value);
+
+    static Result<T> IResult<Result<T>>.Success() => throw new NotImplementedException();
+
+    static Result<T> IResult<Result<T>>.Error(Exception error) => new(error);
 
     public static implicit operator bool(Result<T> result)
         => result.IsSuccess;

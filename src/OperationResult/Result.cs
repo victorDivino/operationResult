@@ -1,11 +1,11 @@
-﻿namespace OperationResult;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public struct Result : IResult
+namespace OperationResult;
+
+public struct Result : IResult<Result>
 {
     public Exception? Exception { get; }
-#if NET5_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, nameof(Exception))]
-#endif
+    [MemberNotNullWhen(false, nameof(Exception))]
     public bool IsSuccess { get; }
 
     public Result(bool success)
@@ -24,7 +24,10 @@ public struct Result : IResult
         where TException : Exception
         => Exception is TException;
 
-    public static Result Success()
+    public static IResult<Result> Success()
+        => new Result(true);
+
+    static Result IResult<Result>.Success()
         => new(true);
 
     public static Result Error(Exception exception)
