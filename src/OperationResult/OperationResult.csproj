@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-    <EnablePreviewFeatures>True</EnablePreviewFeatures>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
     <LangVersion>latestMajor</LangVersion>
@@ -14,8 +13,10 @@
     <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NoWarn>$(NoWarn);CA2252</NoWarn>
-    <Version>4.0.0</Version>
+    <Version>4.0.1</Version>
     <releaseNotes>
+      ## Version 4.0.1 ##
+      - Fixed Result Success method to avoid need of Cast
       ## Version 4.0.0 ##
       - Dropped support from netstandard2.0;net5.0 in favor to use new C# features that require new TFM version
       - Enriched interfaces to reduce need to use Reflection in some scenarios.

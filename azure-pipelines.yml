@@ -18,6 +18,14 @@ stages:
           inputs:
             version: $(dotNetVersion)
             includePreviewVersions: true
+        - task: UseDotNet@2
+          inputs:
+            version: '7.0.x'
+            includePreviewVersions: true
+        - task: UseDotNet@2
+          inputs:
+            version: '6.0.x'
+            includePreviewVersions: true
         - script: dotnet tool restore
           displayName: dotnet tool restore
         - script: dotnet dotnet-cake --target=Coverage
