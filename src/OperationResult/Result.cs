@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OperationResult;
 
@@ -24,10 +24,7 @@ public struct Result : IResult<Result>
         where TException : Exception
         => Exception is TException;
 
-    public static IResult<Result> Success()
-        => new Result(true);
-
-    static Result IResult<Result>.Success()
+    public static Result Success()
         => new(true);
 
     public static Result Error(Exception exception)
