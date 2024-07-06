@@ -1,6 +1,6 @@
 # Operation Result
 
-[![Build Status](https://dev.azure.com/victordoamordivino/OperationResult/_apis/build/status/victorDivino.OperationResult?branchName=master)](https://dev.azure.com/victordoamordivino/OperationResult/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/badge/Nuget-v3.1.0-blue)](https://www.nuget.org/packages/Divino.OperationResult) [![License: MIT](https://img.shields.io/github/license/victorDivino/operationResult)](https://github.com/victorDivino/operationResult/blob/master/LICENSE)
+[![Build Status](https://dev.azure.com/victordoamordivino/OperationResult/_apis/build/status/victorDivino.OperationResult?branchName=master)](https://dev.azure.com/victordoamordivino/OperationResult/_build/latest?definitionId=1&branchName=master) [![NuGet Version](https://img.shields.io/nuget/v/Divino.OperationResult)](https://www.nuget.org/packages/Divino.OperationResult) [![License: MIT](https://img.shields.io/github/license/victorDivino/operationResult)](https://github.com/victorDivino/operationResult/blob/master/LICENSE)
 
 This a simple C# class libary to handle error of an operation.
 
