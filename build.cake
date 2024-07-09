@@ -1,4 +1,4 @@
-#tool "nuget:?package=ReportGenerator&version=4.5.8"
+#tool "nuget:?package=ReportGenerator&version=5.3.7"
 
 var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Debug");
@@ -10,9 +10,9 @@ var nugetVersion = "4.0.1";
 Task("Build")
     .Does(() =>
 {
-    DotNetCoreBuild(solution, new DotNetCoreBuildSettings
+    DotNetBuild(solution, new DotNetBuildSettings
     {
-        Verbosity = DotNetCoreVerbosity.Minimal,
+        Verbosity = DotNetVerbosity.Minimal,
         Configuration = configuration
     });
 });
@@ -21,7 +21,7 @@ Task("UnitTest")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings 
+    DotNetTest(solution, new DotNetTestSettings 
     {
         Configuration = configuration,
         NoRestore = true,
