@@ -17,6 +17,12 @@ jobs:
           6.0.x
     - name: Build & Test
       run: |
-        dotnet tool install --global cake.tool
+        dotnet tool restore
 
-        dotnet-cake --target=Coverage
+        dotnet dotnet-cake --target=Coverage
+    - name: Publish
+      if: github.ref == 'refs/heads/main'
+      run: |
+        dotnet tool restore
+
+        dotnet dotnet-cake --target=Publish
