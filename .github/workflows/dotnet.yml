@@ -43,3 +43,6 @@ jobs:
         dotnet tool restore
 
         dotnet dotnet-cake --target=Publish
+      env: 
+        NUGET_KEY: ${{ secrets.NUGET_KEY }}
+        NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
