@@ -1,6 +1,6 @@
 # Operation Result
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/victorDivino/operationResult/dotnet.yml?branch=main)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/victorDivino/operationResult/dotnet.yml?branch=main&link=https%3A%2F%2Fgithub.com%2FvictorDivino%2FoperationResult%2Factions)
  [![NuGet Version](https://img.shields.io/nuget/v/Divino.OperationResult)](https://www.nuget.org/packages/Divino.OperationResult) [![License: MIT](https://img.shields.io/github/license/victorDivino/operationResult)](https://github.com/victorDivino/operationResult/blob/master/LICENSE)
 
 This a simple C# class libary to handle error of an operation.
