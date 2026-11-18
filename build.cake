@@ -1,18 +1,19 @@
-#tool "nuget:?package=ReportGenerator&version=4.5.8"
+#tool "nuget:?package=ReportGenerator&version=5.6.0"
 
 var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Debug");
 var solution = "./OperationResult.sln";
+var project = "./src/OperationResult/OperationResult.csproj";
 var nugetKey = EnvironmentVariable("NUGET_KEY");
 var nugetSource = EnvironmentVariable("NUGET_SOURCE");
-var nugetVersion = "4.0.1"; 
+var nugetVersion = XmlPeek(project, "/Project/PropertyGroup/Version");
 
 Task("Build")
     .Does(() =>
 {
-    DotNetCoreBuild(solution, new DotNetCoreBuildSettings
+    DotNetBuild(solution, new DotNetBuildSettings
     {
-        Verbosity = DotNetCoreVerbosity.Minimal,
+        Verbosity = DotNetVerbosity.Minimal,
         Configuration = configuration
     });
 });
@@ -21,7 +22,7 @@ Task("UnitTest")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    DotNetCoreTest(solution, new DotNetCoreTestSettings 
+    DotNetTest(solution, new DotNetTestSettings
     {
         Configuration = configuration,
         NoRestore = true,
@@ -32,7 +33,7 @@ Task("UnitTest")
 
 Task("Coverage")
     .IsDependentOn("UnitTest")
-    .Does(async () =>
+    .Does(() =>
 {
     GlobPattern reports = "./TestResults/*/*.xml";
     ReportGenerator(reports, "./coverageOutput", new ReportGeneratorSettings  { ReportTypes = new []
@@ -49,10 +50,11 @@ Task("Coverage")
 });
 
 Task("Publish")
-	.IsDependentOn("Build")
+    .IsDependentOn("Build")
     .Does(() =>
 {
-    NuGetPush($"./src/OperationResult/bin/{configuration}/Divino.OperationResult.{nugetVersion}.nupkg", new NuGetPushSettings {
+    DotNetNuGetPush($"./src/OperationResult/bin/{configuration}/Divino.OperationResult.{nugetVersion}.nupkg", new DotNetNuGetPushSettings
+    {
         Source = nugetSource,
         ApiKey = nugetKey,
         SkipDuplicate = true

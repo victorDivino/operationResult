@@ -2,42 +2,42 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace OperationResult;
 
-public struct Result : IResult<Result>
+/// <summary>
+/// The result of an operation that returns no value: either <see cref="Ok"/> or an <see cref="System.Exception"/>.
+/// </summary>
+/// <remarks>
+/// <c>default(Result)</c> holds neither case (its <c>Value</c> is <see langword="null"/>), so it is not a success.
+/// Add a <c>null</c> arm when switching over results that may be default.
+/// </remarks>
+public union Result(Ok, Exception) : IResult<Result>
 {
-    public Exception? Exception { get; }
+    public Exception? Exception => Value as Exception;
+
     [MemberNotNullWhen(false, nameof(Exception))]
-    public bool IsSuccess { get; }
-
-    public Result(bool success)
-    {
-        IsSuccess = success;
-        Exception = null;
-    }
-
-    public Result(Exception exception)
-    {
-        Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-        IsSuccess = false;
-    }
+    public bool IsSuccess => Value is Ok;
 
     public bool ErrorIs<TException>()
         where TException : Exception
-        => Exception is TException;
+        => Value is TException;
 
     public static Result Success()
-        => new(true);
+        => new(Ok.Instance);
 
     public static Result Error(Exception exception)
-        => new(exception);
+    {
+        ArgumentNullException.ThrowIfNull(exception);
+        return new(exception);
+    }
 
     public static Result<T> Success<T>(T value)
-        => new(value);
+        => Result<T>.Success(value);
 
     public static Result<T> Error<T>(Exception exception)
-        => new(exception);
+        => Result<T>.Error(exception);
 
+    // Kept as user-defined conversions so consumers on C# 14 or earlier can still write `return exception;`.
     public static implicit operator Result(Exception exception)
-        => new(exception);
+        => Error(exception);
 
     public static implicit operator bool(Result result)
         => result.IsSuccess;
@@ -49,4 +49,6 @@ public struct Result : IResult<Result>
         => (success, exception) = (IsSuccess, Exception);
 
     public Task<Result> AsTask => Task.FromResult(this);
+
+    public override string ToString() => Value?.ToString() ?? string.Empty;
 }

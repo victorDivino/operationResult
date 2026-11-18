@@ -1,20 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net10.0;net11.0</TargetFrameworks>
+    <!-- C# 15 union types. net11.0 defaults to C# 15; older TFMs use the internal polyfill in Polyfills/. -->
+    <LangVersion>15</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>true</ImplicitUsings>
-    <LangVersion>latestMajor</LangVersion>
     <Authors>Victor Divino</Authors>
     <Product>OperationResult</Product>
     <PackageId>Divino.OperationResult</PackageId>
     <Description>This a simple C# class libary to handle error of an operation</Description>
-    <PackageTags>error handling operation result</PackageTags>
+    <PackageTags>error handling operation result union</PackageTags>
     <PackageProjectUrl>https://github.com/victorDivino/operationResult</PackageProjectUrl>
     <RepositoryUrl>https://github.com/victorDivino/operationResult</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <NoWarn>$(NoWarn);CA2252</NoWarn>
-    <Version>4.0.1</Version>
-    <releaseNotes>
+    <Version>5.0.0</Version>
+    <PackageReleaseNotes>
+      ## Version 5.0.0 ##
+      - Result and Result&lt;T&gt; are now C# 15 union types: Result(Ok, Exception) and Result&lt;T&gt;(T, Exception)
+      - Exhaustive pattern matching: result switch { T value => ..., Exception error => ..., null => ... }
+      - Target frameworks: net8.0;net10.0;net11.0
+      - Breaking: Value is now object? (the union contents). Use TryGetValue/GetValueOrDefault for the typed value
+      - Breaking: public constructors replaced by Success/Error factories and implicit conversions
+      - Breaking: successful values cannot be null; default(Result) is neither success nor error
+      - Ships an agent skill (skills/operationresult-migration) to migrate code from 4.x
       ## Version 4.0.1 ##
       - Fixed Result Success method to avoid need of Cast
       ## Version 4.0.0 ##
@@ -27,12 +38,17 @@
       - Anotated properties with Nullable attributes
       ## Version 2.0.2 ##
       Throw ArgumentNullException
-    </releaseNotes>
+    </PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.2.25">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <!-- Agent skills shipped in the package: https://devblogs.microsoft.com/dotnet/delivering-skills-in-nuget-packages/ -->
+    <None Include="..\..\skills\**\*" Pack="true" PackagePath="skills\" />
   </ItemGroup>
 </Project>

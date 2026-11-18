@@ -1,6 +1,6 @@
 # Operation Result
 
-[![Build Status](https://dev.azure.com/victordoamordivino/OperationResult/_apis/build/status/victorDivino.OperationResult?branchName=master)](https://dev.azure.com/victordoamordivino/OperationResult/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/badge/Nuget-v3.1.0-blue)](https://www.nuget.org/packages/Divino.OperationResult) [![License: MIT](https://img.shields.io/github/license/victorDivino/operationResult)](https://github.com/victorDivino/operationResult/blob/master/LICENSE)
+[![Build Status](https://dev.azure.com/victordoamordivino/OperationResult/_apis/build/status/victorDivino.OperationResult?branchName=master)](https://dev.azure.com/victordoamordivino/OperationResult/_build/latest?definitionId=1&branchName=master) [![NuGet](https://img.shields.io/badge/Nuget-v5.0.0-blue)](https://www.nuget.org/packages/Divino.OperationResult) [![License: MIT](https://img.shields.io/github/license/victorDivino/operationResult)](https://github.com/victorDivino/operationResult/blob/master/LICENSE)
 
 This a simple C# class libary to handle error of an operation.
 
@@ -16,25 +16,24 @@ The purpose of the Operation Result design pattern is to give an operation (a me
 - Access the success indicator of an operation.
 - Access the cause of the failure in case the operation was not successful.
 
+## Requirements
+
+- Target frameworks: `net8.0`, `net10.0`, `net11.0`.
+- Any C# version can use the properties, factories and implicit conversions.
+- Pattern matching on the union cases needs **C# 15**. That is the default on `net11.0`; on `net8.0`/`net10.0`, add `<LangVersion>15</LangVersion>` (requires the .NET 11 SDK).
+
 ## OperationResult Namespace
 
-Represents the result of an operation. The result must be immutable and its properties must be read-only.
+Since 5.0, both results are [C# 15 union types](https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/union). A result holds exactly one of its cases:
 
 ```csharp
-public struct Result
+public union Result(Ok, Exception);
+public union Result<T>(T, Exception);
 ```
 
-```csharp
-public struct Result<T>
-```
+`Ok` is the success marker of the non-generic `Result` (`Ok.Instance`).
 
 ### Properties
-
-Access the result of the operation, in case there is one.
-
-```csharp
- public T Value { get; set; }
-```
 
 Access the success indicator of the operation.
 
@@ -45,42 +44,34 @@ public bool IsSuccess { get; }
 Access the cause of the failure in case the operation was not successful.
 
 ```csharp
-public Exception Exception { get; }
+public Exception? Exception { get; }
+```
+
+Access the union contents (`T`/`Ok`, an `Exception`, or `null` for `default`).
+
+```csharp
+public object? Value { get; }
 ```
 
 ### Methods
 
 ```csharp
-public static Result Success()
-    => new Result(true);
+Result.Success();                  // Result
+Result.Error(exception);           // Result
+Result.Success<T>(value);          // Result<T>
+Result.Error<T>(exception);        // Result<T>
+
+result.TryGetValue(out T value);   // Result<T>: typed access to the value
+result.GetValueOrDefault();        // Result<T>
+result.GetValueOrDefault(fallback);
+result.ErrorIs<TException>();
 ```
 
-```csharp
-public static Result<T> Success<T>(T value)
-    => new Result<T>(value);
-```
+Success values cannot be `null`, and `Error` doesn't accept a `null` exception. Both throw `ArgumentNullException`.
 
-```csharp
-public static Result Error(Exception exception)
-    => new Result(exception);
-```
+## Implicit conversions
 
-```csharp
-public static Result<T> Error<T>(Exception exception)
-    => new Result<T>(exception);
-```
-
-## Implicit operators
-
-```csharp
-public static implicit operator Result<T>(T value)
-    => new Result<T>(value);
-
-public static implicit operator Result<T>(Exception exception)
-    => new Result<T>(exception);
-```
-
-The following example demonstrates how to use it:
+Return the value or the exception directly:
 
 ```csharp
 Result<int> IncrementOne(int value)
@@ -89,28 +80,27 @@ Result<int> IncrementOne(int value)
     {
         return new ArgumentOutOfRangeException(nameof(value), "Value cannot be greater than nine.");
     }
-    return value++;
+    return value + 1;
 }
 ```
 
-## Deconstructing a Result
+## Pattern matching (C# 15)
+
+Type patterns look inside the union, and the compiler checks that every case is handled:
 
 ```csharp
-public void Deconstruct(out bool success, out T value)
+string message = IncrementOne(2) switch
 {
-    success = IsSuccess;
-    value = Value;
-}
-
-public void Deconstruct(out bool success, out T value, out Exception exception)
-{
-    success = IsSuccess;
-    value = Value;
-    exception = Exception;
-}
+    int value => $"Got {value}",
+    ArgumentOutOfRangeException => "Too big",
+    Exception error => error.Message,
+    null => "No result",   // default(Result<int>)
+};
 ```
 
-The following example demonstrates how to use it:
+Prefer a `null` arm over `_`, so that the compiler can still warn you about unhandled cases.
+
+## Deconstructing a Result
 
 ```csharp
 public static void Main()
@@ -120,3 +110,9 @@ public static void Main()
     // Do something with the data.
 }
 ```
+
+## Migrating from 4.x
+
+5.0 is a breaking release: `Result<T>.Value` is now the `object?` union contents (use `TryGetValue`/`GetValueOrDefault`), the public constructors were replaced by factories, and `null` success values are rejected.
+
+The package ships an agent skill, **`operationresult-migration`**, which walks an AI coding agent through the migration. After restore, it is at `~/.nuget/packages/divino.operationresult/5.0.0/skills/operationresult-migration/SKILL.md` (see [Delivering skills in NuGet packages](https://devblogs.microsoft.com/dotnet/delivering-skills-in-nuget-packages/)). You can also read it in this repository: [skills/operationresult-migration/SKILL.md](skills/operationresult-migration/SKILL.md).

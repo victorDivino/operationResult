@@ -10,7 +10,7 @@ public class OperationResultGenericTests
 
         //Assert
         result.IsSuccess.Should().BeTrue();
-        result.Value.Should().Be(1);
+        result.GetValueOrDefault().Should().Be(1);
         result.Exception.Should().BeNull();
     }
 
@@ -22,7 +22,7 @@ public class OperationResultGenericTests
 
         //Assert
         result.IsSuccess.Should().BeFalse();
-        result.Value.Should().BeNull();
+        result.GetValueOrDefault().Should().BeNull();
         result.Exception.Should().BeEquivalentTo(new Exception("Error"));
     }
 
